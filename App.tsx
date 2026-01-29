@@ -1,17 +1,16 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { Task, Label, ViewType, TimeRange, Priority } from './types';
-import { INITIAL_LABELS, INITIAL_TASKS } from './constants';
-import { isToday, isTomorrow, isPast, getLocalDateString } from './utils/dateUtils';
-import TaskItem from './components/TaskItem';
-import AgendaView from './components/AgendaView';
-import NotesView from './components/NotesView';
-import TaskModal from './components/TaskModal';
-import LabelManager from './components/LabelManager';
-import Button from './components/Button';
+import { Task, Label, ViewType, TimeRange, Priority } from './types.ts';
+import { INITIAL_LABELS, INITIAL_TASKS } from './constants.tsx';
+import { isToday, isTomorrow, isPast, getLocalDateString } from './utils/dateUtils.ts';
+import TaskItem from './components/TaskItem.tsx';
+import AgendaView from './components/AgendaView.tsx';
+import NotesView from './components/NotesView.tsx';
+import TaskModal from './components/TaskModal.tsx';
+import LabelManager from './components/LabelManager.tsx';
+import Button from './components/Button.tsx';
 
 const App: React.FC = () => {
-  // State
   const [tasks, setTasks] = useState<Task[]>(() => {
     const saved = localStorage.getItem('tasks_v3');
     return saved ? JSON.parse(saved) : INITIAL_TASKS;
@@ -29,7 +28,6 @@ const App: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Persist data robustly
   useEffect(() => {
     localStorage.setItem('tasks_v3', JSON.stringify(tasks));
   }, [tasks]);
@@ -38,7 +36,6 @@ const App: React.FC = () => {
     localStorage.setItem('labels_v3', JSON.stringify(labels));
   }, [labels]);
 
-  // Filter Logic
   const filteredTasks = useMemo(() => {
     return tasks.filter(task => {
       const titleLower = task.title.toLowerCase();
@@ -48,7 +45,6 @@ const App: React.FC = () => {
       const matchesSearch = titleLower.includes(queryLower) || descLower.includes(queryLower);
       
       if (!matchesSearch) return false;
-
       if (activeRange === 'all') return true;
 
       switch (activeRange) {
@@ -61,12 +57,8 @@ const App: React.FC = () => {
     });
   }, [tasks, activeRange, searchQuery]);
 
-  const getDefaultDate = () => {
-    const d = new Date();
-    if (activeRange === 'tomorrow') d.setDate(d.getDate() + 1);
-    else if (activeRange === 'past') d.setDate(d.getDate() - 1);
-    else if (activeRange === 'upcoming') d.setDate(d.getDate() + 2);
-    return getLocalDateString(d);
+  const updateTask = (id: string, updates: Partial<Task>) => {
+    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } as Task : t));
   };
 
   const saveTask = (taskData: Partial<Task>) => {
@@ -89,21 +81,23 @@ const App: React.FC = () => {
     setEditingTask(null);
   };
 
-  const updateTask = (id: string, updates: Partial<Task>) => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } as Task : t));
-  };
-
   const toggleTask = (id: string) => updateTask(id, { completed: !tasks.find(t => t.id === id)?.completed });
   const deleteTask = (id: string) => setTasks(prev => prev.filter(t => t.id !== id));
 
+  const getDefaultDate = () => {
+    const d = new Date();
+    if (activeRange === 'tomorrow') d.setDate(d.getDate() + 1);
+    else if (activeRange === 'past') d.setDate(d.getDate() - 1);
+    else if (activeRange === 'upcoming') d.setDate(d.getDate() + 2);
+    return getLocalDateString(d);
+  };
+
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-slate-900/50 md:hidden animate-in fade-in duration-200" onClick={() => setMobileMenuOpen(false)} />
       )}
 
-      {/* Sidebar Navigation */}
       <aside className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-out md:relative md:translate-x-0 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-8 h-full flex flex-col">
           <div className="flex items-center gap-3 mb-10">
@@ -175,7 +169,6 @@ const App: React.FC = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-grow flex flex-col min-w-0 h-full relative">
         <header className="bg-white border-b border-slate-200 px-4 md:px-10 py-5 md:py-7 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-6 flex-grow">
@@ -204,14 +197,12 @@ const App: React.FC = () => {
               <button 
                 onClick={() => setViewType('list')}
                 className={`p-2 rounded-xl transition-all ${viewType === 'list' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
-                title="Lista"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" /></svg>
               </button>
               <button 
                 onClick={() => setViewType('agenda')}
                 className={`p-2 rounded-xl transition-all ${viewType === 'agenda' ? 'bg-white shadow-sm text-indigo-600' : 'text-slate-500 hover:text-slate-800'}`}
-                title="Agenda"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               </button>
@@ -245,7 +236,6 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Modals */}
       {isTaskModalOpen && (
         <TaskModal task={editingTask} labels={labels} onSave={saveTask} defaultDate={getDefaultDate()} onClose={() => { setIsTaskModalOpen(false); setEditingTask(null); }} />
       )}
