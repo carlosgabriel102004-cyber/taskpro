@@ -1,15 +1,19 @@
 
-# Configuração para suportar módulos TypeScript/JSX diretamente no navegador
+# Configurações para TaskPro AI no cPanel
 <IfModule mod_mime.c>
   AddType application/javascript .ts
   AddType application/javascript .tsx
 </IfModule>
 
-# Garante que o navegador não cacheie versões erradas durante seus testes
+# Corrige possíveis erros de "CORS" ou bloqueios de módulos
 <IfModule mod_headers.c>
-  <FilesMatch "\.(ts|tsx|js|html)$">
-    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+  Header set Access-Control-Allow-Origin "*"
+  <FilesMatch "\.(ts|tsx|js|html|css)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
     Header set Pragma "no-cache"
     Header set Expires "0"
   </FilesMatch>
 </IfModule>
+
+# Garante que o servidor não tente processar .tsx como arquivos CGI ou similar
+Options -ExecCGI

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Task, Priority } from '../types';
-import Button from './Button';
+import { Task, Priority } from '../types.ts';
+import Button from './Button.tsx';
 
 interface NotesViewProps {
   tasks: Task[];
@@ -111,8 +111,8 @@ const NotesView: React.FC<NotesViewProps> = ({ tasks, onUpdateTask }) => {
             )}
           </article>
         ))}
-      </div>
-    );
-  };
+    </div>
+  );
+};
 
 export default NotesView;

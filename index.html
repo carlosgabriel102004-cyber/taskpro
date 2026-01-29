@@ -6,56 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskPro AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344'/><path d='m9 11 3 3L22 4'/></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236366f1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M21 10.656V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.344'/><path d='m9 11 3 3L22 4'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script>
-        // Define o objeto process antes de qualquer outro script carregar
-        window.process = { 
-            env: { 
-                NODE_ENV: 'production',
-                API_KEY: "" // A chave será injetada pelo ambiente se disponível
-            } 
-        };
+        // Prepara o ambiente para o SDK da Gemini e logs de erro
+        window.process = { env: { NODE_ENV: 'production', API_KEY: "" } };
         
+        window.addEventListener('error', function(e) {
+            const root = document.getElementById('root');
+            if (root && root.innerHTML === '') {
+                root.innerHTML = `<div style="padding: 20px; color: #ef4444; font-family: sans-serif;">
+                    <h2 style="font-weight: 900;">Erro de Carregamento</h2>
+                    <p>O navegador encontrou um erro ao processar os arquivos do aplicativo:</p>
+                    <pre style="background: #fee2e2; padding: 10px; border-radius: 8px; font-size: 12px; overflow: auto;">${e.message}\n${e.filename}:${e.lineno}</pre>
+                    <p style="font-size: 13px; color: #64748b;">Dica: Verifique se o arquivo .htaccess está presente na mesma pasta.</p>
+                </div>`;
+            }
+        });
+
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                 },
             },
         }
     </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
+        #root:empty::before {
+            content: "Iniciando TaskPro AI...";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #6366f1;
+            font-weight: 700;
+            font-size: 1.25rem;
         }
     </style>
 <script type="importmap">
 {
   "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
     "react": "https://esm.sh/react@^19.2.4",
     "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/",
     "@google/genai": "https://esm.sh/@google/genai@^1.38.0"
   }
 }
@@ -63,10 +62,7 @@
 </head>
 <body>
     <div id="root"></div>
-    
-    <!-- O esm.sh/run é a solução mágica para rodar TSX direto no cPanel sem build step -->
-    <script type="module">
-        import "https://esm.sh/run/./index.tsx";
-    </script>
+    <!-- Usando o runner estável do esm.sh para transformar TSX no navegador -->
+    <script type="module" src="https://esm.sh/run/./index.tsx"></script>
 </body>
 </html>
