@@ -22,6 +22,6 @@ export interface Task {
   createdAt: string;
 }
 
-export type ViewType = 'list' | 'agenda';
+export type ViewType = 'list' | 'agenda' | 'notes';
 
-export type TimeRange = 'past' | 'today' | 'tomorrow' | 'upcoming';
+export type TimeRange = 'past' | 'today' | 'tomorrow' | 'upcoming' | 'all';
