@@ -11,8 +11,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
     <script>
-        // Prevenção contra erro de 'process is not defined' no navegador (cPanel/Produção)
-        window.process = { env: { API_KEY: "" } };
+        // Define o objeto process antes de qualquer outro script carregar
+        window.process = { 
+            env: { 
+                NODE_ENV: 'production',
+                API_KEY: "" // A chave será injetada pelo ambiente se disponível
+            } 
+        };
         
         tailwind.config = {
             theme: {
@@ -44,9 +49,6 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-        input, button, textarea, select {
-            font-family: inherit;
-        }
     </style>
 <script type="importmap">
 {
@@ -61,7 +63,10 @@
 </head>
 <body>
     <div id="root"></div>
-    <!-- Carregamento explícito do script de entrada para evitar tela branca em hosts externos -->
-    <script type="module" src="./index.tsx"></script>
+    
+    <!-- O esm.sh/run é a solução mágica para rodar TSX direto no cPanel sem build step -->
+    <script type="module">
+        import "https://esm.sh/run/./index.tsx";
+    </script>
 </body>
 </html>

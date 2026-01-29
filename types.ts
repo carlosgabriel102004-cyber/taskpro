@@ -15,7 +15,7 @@ export interface Task {
   id: string;
   title: string;
   description: string;
-  dueDate: string; // ISO string
+  dueDate: string;
   completed: boolean;
   priority: Priority;
   labelIds: string[];
