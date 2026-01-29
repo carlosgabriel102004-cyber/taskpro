@@ -7,12 +7,14 @@ export function getLocalDateString(date: Date = new Date()): string {
 }
 
 export function isToday(dateStr: string): boolean {
+  if (!dateStr) return false;
   const taskDate = dateStr.split('T')[0];
   const today = getLocalDateString();
   return taskDate === today;
 }
 
 export function isTomorrow(dateStr: string): boolean {
+  if (!dateStr) return false;
   const taskDate = dateStr.split('T')[0];
   const tomorrowDate = new Date();
   tomorrowDate.setDate(tomorrowDate.getDate() + 1);
@@ -21,23 +23,34 @@ export function isTomorrow(dateStr: string): boolean {
 }
 
 export function isPast(dateStr: string): boolean {
+  if (!dateStr) return false;
   const taskDate = dateStr.split('T')[0];
   const today = getLocalDateString();
   return taskDate < today;
 }
 
 export function formatDate(dateStr: string): string {
-  // Ajuste para evitar que o JS retroceda um dia ao converter string de data pura
+  if (!dateStr) return "Sem data";
   const parts = dateStr.split('T')[0].split('-');
   const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
   
+  const today = getLocalDateString();
+  const taskDate = dateStr.split('T')[0];
+  
+  if (taskDate === today) return "Hoje";
+  
+  const tomorrowDate = new Date();
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  if (taskDate === getLocalDateString(tomorrowDate)) return "Amanhã";
+
   return d.toLocaleDateString('pt-BR', { 
     day: '2-digit', 
-    month: 'long' 
+    month: 'short' 
   });
 }
 
 export function formatFullDate(dateStr: string): string {
+  if (!dateStr) return "";
   const parts = dateStr.split('T')[0].split('-');
   const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
   
