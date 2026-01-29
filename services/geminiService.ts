@@ -1,10 +1,15 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
 export async function analyzeTaskPrompt(prompt: string) {
   try {
+    const apiKey = process.env.API_KEY || "";
+    if (!apiKey) {
+      console.warn("Gemini API Key não configurada.");
+      return null;
+    }
+    
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: `Analise a seguinte tarefa e sugira uma prioridade (Baixa, Média, Alta) e um rótulo adequado. Tarefa: "${prompt}"`,

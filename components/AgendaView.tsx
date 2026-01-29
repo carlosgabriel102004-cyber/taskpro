@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Task, Label } from '../types';
-import TaskItem from './TaskItem';
-import { formatFullDate } from '../utils/dateUtils';
+import { Task, Label } from '../types.ts';
+import TaskItem from './TaskItem.tsx';
+import { formatFullDate } from '../utils/dateUtils.ts';
 
 interface AgendaViewProps {
   tasks: Task[];
@@ -13,7 +13,6 @@ interface AgendaViewProps {
 }
 
 const AgendaView: React.FC<AgendaViewProps> = ({ tasks, labels, onToggle, onDelete, onEdit }) => {
-  // Agrupar tarefas por data
   const groups: Record<string, Task[]> = {};
   tasks.sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()).forEach(task => {
     const dateKey = task.dueDate.split('T')[0];

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Task, Label, Priority } from '../types';
-import { formatDate } from '../utils/dateUtils';
+import { Task, Label, Priority } from '../types.ts';
+import { formatDate } from '../utils/dateUtils.ts';
 
 interface TaskItemProps {
   task: Task;

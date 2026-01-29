@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { Task, Label, Priority } from '../types';
-import Button from './Button';
-import { analyzeTaskPrompt } from '../services/geminiService';
+import { Task, Label, Priority } from '../types.ts';
+import Button from './Button.tsx';
+import { analyzeTaskPrompt } from '../services/geminiService.ts';
 
 interface TaskModalProps {
   task?: Task | null;
@@ -25,7 +25,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, labels, defaultDate, onSave
     onSave({
       title,
       description,
-      dueDate: dueDate, // Mantém como string YYYY-MM-DD para evitar shifts de timezone
+      dueDate: dueDate,
       priority,
       labelIds: selectedLabels,
       completed: task?.completed || false,
@@ -122,9 +122,9 @@ const TaskModal: React.FC<TaskModalProps> = ({ task, labels, defaultDate, onSave
                   onChange={(e) => setPriority(e.target.value as Priority)}
                   className="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none text-slate-950 font-bold appearance-none cursor-pointer"
                 >
-                  <option value={Priority.LOW} className="text-black bg-white">Baixa</option>
-                  <option value={Priority.MEDIUM} className="text-black bg-white">Média</option>
-                  <option value={Priority.HIGH} className="text-black bg-white">Alta</option>
+                  <option value={Priority.LOW}>Baixa</option>
+                  <option value={Priority.MEDIUM}>Média</option>
+                  <option value={Priority.HIGH}>Alta</option>
                 </select>
               </div>
             </div>

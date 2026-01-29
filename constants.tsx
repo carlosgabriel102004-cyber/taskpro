@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Label, Priority } from './types';
+import { Label, Priority } from './types.ts';
 
 export const PRESET_COLORS = [
   '#ef4444', '#f97316', '#f59e0b', '#10b981', 
